@@ -19,5 +19,9 @@ LOCAL_SHARED_LIBRARIES := \
     libmedia \
     libnativehelper \
 
+ifeq ($(TARGET_QCOM_NO_FM_FIRMWARE),true)
+    LOCAL_CFLAGS += -DQCOM_NO_FM_FIRMWARE
+endif
+
 LOCAL_MODULE := libfmjni
 include $(BUILD_SHARED_LIBRARY)
