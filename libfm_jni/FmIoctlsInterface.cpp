@@ -49,7 +49,6 @@ int FmIoctlsInterface :: start_fm_patch_dl
     char prop_value[PROPERTY_VALUE_MAX] = {'\0'};
     struct v4l2_capability cap;
 
-#ifndef QCOM_NO_FM_FIRMWARE
     ALOGE("start_fm_patch_dl = %d\n",fd);
     ret = ioctl(fd, VIDIOC_QUERYCAP, &cap);
     ALOGE("executed cmd\n");
@@ -70,6 +69,7 @@ int FmIoctlsInterface :: start_fm_patch_dl
             ALOGE("set FM_INIT_PROP done");
             if(ret != PROP_SET_SUCC)
                return FM_FAILURE;
+#ifndef QCOM_NO_FM_FIRMWARE
             ret = property_set(SCRIPT_START_PROP, SOC_PATCH_DL_SCRPT);
             if(ret != PROP_SET_SUCC)
                return FM_FAILURE;
@@ -82,6 +82,13 @@ int FmIoctlsInterface :: start_fm_patch_dl
                     usleep(INIT_WAIT_TIMEOUT);
                 }
             }
+#else
+            ret = property_set(FM_INIT_PROP, "1");
+            usleep(INIT_WAIT_TIMEOUT);
+            if(ret != PROP_SET_SUCC)
+               return FM_FAILURE;
+            init_success = 1;
+#endif
             if(!init_success) {
                 property_set(SCRIPT_STOP_PROP, SOC_PATCH_DL_SCRPT);
                 return FM_FAILURE;
@@ -92,10 +99,6 @@ int FmIoctlsInterface :: start_fm_patch_dl
     }else {
         return FM_FAILURE;
     }
-#else
-    usleep(INIT_WAIT_TIMEOUT);
-    return FM_SUCCESS;
-#endif
 }
 
 int  FmIoctlsInterface :: close_fm_patch_dl
