@@ -1,4 +1,3 @@
-ifneq (,$(filter $(QCOM_BOARD_PLATFORMS),$(TARGET_BOARD_PLATFORM)))
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -20,10 +19,5 @@ LOCAL_SHARED_LIBRARIES := \
     libmedia \
     libnativehelper \
 
-#LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-#LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
-
 LOCAL_MODULE := libfmjni
 include $(BUILD_SHARED_LIBRARY)
-
-endif
